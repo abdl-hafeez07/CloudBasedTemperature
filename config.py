@@ -1,0 +1,3 @@
+SUPABASE_URL = "https://gaefhvdsxvhptxfhjylh.supabase.co"
+
+SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdhZWZodmRzeHZocHR4ZmhqeWxoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQxODEzODIsImV4cCI6MjA5OTc1NzM4Mn0.g391PFCEGFLshL-KIcxJjxOUEtiptBNfYTDWXwaFccc"

@@ -1,0 +1,212 @@
+/* Reset */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body */
+
+body {
+
+    font-family: Arial, Helvetica, sans-serif;
+    background: #eef2f7;
+    color: #2c3e50;
+
+}
+
+/* Main Container */
+
+.container {
+
+    width: 90%;
+    max-width: 1400px;
+    margin: 30px auto;
+
+}
+
+/* Header */
+
+header {
+
+    text-align: center;
+    margin-bottom: 30px;
+
+}
+
+header h1 {
+
+    font-size: 42px;
+    color: #2c3e50;
+
+}
+
+header p {
+
+    margin-top: 10px;
+    color: #666;
+    font-size: 18px;
+
+}
+
+/* Refresh Button */
+
+.refresh {
+
+    text-align: center;
+    margin-bottom: 30px;
+
+}
+
+button {
+
+    background: #28a745;
+    color: white;
+    border: none;
+    padding: 14px 28px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: .3s;
+
+}
+
+button:hover {
+
+    background: #218838;
+
+}
+
+/* Dashboard Cards */
+
+.cards {
+
+    display: flex;
+    justify-content: space-between;
+    gap: 25px;
+    margin-bottom: 40px;
+
+}
+
+.card {
+
+    flex: 1;
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, .08);
+
+}
+
+.card h3 {
+
+    color: #666;
+    margin-bottom: 20px;
+
+}
+
+.card h2 {
+
+    color: #2E86DE;
+    font-size: 34px;
+
+}
+
+/* Section Titles */
+
+section h2 {
+
+    margin-bottom: 20px;
+    color: #2c3e50;
+
+}
+
+/* Table */
+
+table {
+
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    margin-bottom: 40px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, .08);
+
+}
+
+thead {
+
+    background: #28a745;
+    color: white;
+
+}
+
+th {
+
+    padding: 15px;
+    font-size: 18px;
+
+}
+
+td {
+
+    padding: 14px;
+    text-align: center;
+    border: 1px solid #ddd;
+
+}
+
+tbody tr:nth-child(even) {
+
+    background: #f8f8f8;
+
+}
+
+tbody tr:hover {
+
+    background: #eaf7ea;
+
+}
+
+/* Chart */
+
+.chart-box {
+
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, .08);
+
+    height: 500px;
+
+}
+
+/* Footer */
+
+footer {
+
+    margin-top: 40px;
+    text-align: center;
+    color: #666;
+    font-size: 15px;
+
+}
+
+/* Responsive */
+
+@media(max-width:900px) {
+
+    .cards {
+
+        flex-direction: column;
+
+    }
+
+    header h1 {
+
+        font-size: 30px;
+
+    }
+
+}
