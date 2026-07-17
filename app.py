@@ -1,13 +1,25 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, send_file
 from supabase import create_client
 from config import SUPABASE_URL, SUPABASE_KEY
+import pandas as pd
+import io
 
-# Flask App
+# -----------------------------------------
+# Flask Application
+# -----------------------------------------
+
 app = Flask(__name__)
 
+# -----------------------------------------
 # Connect to Supabase
+# -----------------------------------------
+
 supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
+
+# -----------------------------------------
+# Home Page
+# -----------------------------------------
 
 @app.route("/")
 def home():
@@ -21,7 +33,7 @@ def home():
         .execute()
     )
 
-    # Reverse so oldest appears first in table and graph
+    # Display oldest to newest
     records = list(reversed(response.data))
 
     labels = []
@@ -31,7 +43,8 @@ def home():
         labels.append(row["created_at"][11:19])      # HH:MM:SS
         temperatures.append(float(row["temperature"]))
 
-    # Dashboard Cards
+    # Dashboard Information
+
     if records:
 
         latest_temp = float(records[-1]["temperature"])
@@ -65,6 +78,42 @@ def home():
         status=status
     )
 
+
+# -----------------------------------------
+# Export CSV
+# -----------------------------------------
+
+@app.route("/export")
+def export_csv():
+
+    response = (
+        supabase.table("temperature_data")
+        .select("*")
+        .order("created_at")
+        .execute()
+    )
+
+    records = response.data
+
+    df = pd.DataFrame(records)
+
+    output = io.BytesIO()
+
+    df.to_csv(output, index=False)
+
+    output.seek(0)
+
+    return send_file(
+        output,
+        mimetype="text/csv",
+        as_attachment=True,
+        download_name="temperature_records.csv"
+    )
+
+
+# -----------------------------------------
+# Run Flask
+# -----------------------------------------
 
 if __name__ == "__main__":
     app.run(debug=True)

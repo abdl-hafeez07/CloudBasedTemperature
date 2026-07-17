@@ -2,28 +2,46 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Cloud Temperature Monitoring System</title>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 </head>
 
 <body>
 
     <div class="container">
 
+        <!-- Header -->
+
         <header>
+
             <h1>🌡 Cloud Temperature Monitoring System</h1>
+
             <p>IoT Temperature Monitoring using Flask & Supabase</p>
+
         </header>
 
-        <div class="refresh">
+        <!-- Buttons -->
+
+        <div class="button-group">
+
             <button onclick="window.location.reload();">
                 🔄 Refresh Dashboard
             </button>
+
+            <a href="/export">
+                <button type="button">
+                    📥 Export CSV
+                </button>
+            </a>
+
         </div>
 
         <!-- Dashboard Cards -->
@@ -31,23 +49,32 @@
         <div class="cards">
 
             <div class="card">
+
                 <h3>Current Temperature</h3>
+
                 <h2>{{ latest_temp }} °C</h2>
+
             </div>
 
             <div class="card">
+
                 <h3>Status</h3>
+
                 <h2>{{ status }}</h2>
+
             </div>
 
             <div class="card">
+
                 <h3>Total Records</h3>
+
                 <h2>{{ total_records }}</h2>
+
             </div>
 
         </div>
 
-        <!-- Temperature Table -->
+        <!-- Temperature Records -->
 
         <section>
 
@@ -58,9 +85,11 @@
                 <thead>
 
                     <tr>
+
                         <th>ID</th>
                         <th>Temperature (°C)</th>
                         <th>Time</th>
+
                     </tr>
 
                 </thead>
@@ -101,19 +130,28 @@
 
         </section>
 
+        <!-- Footer -->
+
         <footer>
 
-            Developed by Abdul Hafeez |
-            Cloud Temperature Monitoring System
+            <p>Developed by Abdul Hafeez</p>
+
+            <p>Flask • Supabase • Chart.js</p>
+
+            <p id="lastRefresh"></p>
 
         </footer>
 
     </div>
 
+
     <script>
 
         const labels = {{ labels| tojson }};
         const temperatures = {{ temperatures| tojson }};
+
+        document.getElementById("lastRefresh").innerHTML =
+            "Last Updated : " + new Date().toLocaleTimeString();
 
         const ctx = document.getElementById("temperatureChart");
 
@@ -131,21 +169,21 @@
 
                     data: temperatures,
 
-                    borderColor: "#2E86DE",
+                    borderColor: "#007BFF",
 
-                    backgroundColor: "transparent",
+                    backgroundColor: "rgba(0,123,255,0.10)",
 
                     borderWidth: 3,
 
                     fill: false,
 
-                    tension: 0.25,
+                    tension: 0.3,
 
-                    pointRadius: 4,
+                    pointRadius: 5,
 
                     pointHoverRadius: 7,
 
-                    pointBackgroundColor: "#2E86DE"
+                    pointBackgroundColor: "#007BFF"
 
                 }]
 
@@ -185,14 +223,7 @@
 
                             display: true,
 
-                            text: "Time",
-
-                            font: {
-
-                                size: 14,
-                                weight: "bold"
-
-                            }
+                            text: "Time"
 
                         }
 
@@ -206,14 +237,7 @@
 
                             display: true,
 
-                            text: "Temperature (°C)",
-
-                            font: {
-
-                                size: 14,
-                                weight: "bold"
-
-                            }
+                            text: "Temperature (°C)"
 
                         }
 
@@ -224,6 +248,14 @@
             }
 
         });
+
+
+        // Auto Refresh Every 5 Seconds
+        setTimeout(function () {
+
+            window.location.href = "/?refresh=" + new Date().getTime();
+
+        }, 5000);
 
     </script>
 
