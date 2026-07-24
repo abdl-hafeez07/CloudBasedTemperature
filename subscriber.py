@@ -1,13 +1,13 @@
 import paho.mqtt.client as mqtt
 
-BROKER = "localhost"
+BROKER = "broker.hivemq.com"
 PORT = 1883
 
 TOPICS = [
-    ("home/temperature", 0),
-    ("home/humidity", 0),
-    ("home/light", 0),
-    ("home/motion", 0)
+    ("abdulhafeez/iot/temperature", 0),
+    ("abdulhafeez/iot/humidity", 0),
+    ("abdulhafeez/iot/light", 0),
+    ("abdulhafeez/iot/motion", 0)
 ]
 
 

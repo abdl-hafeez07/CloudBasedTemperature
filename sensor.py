@@ -13,7 +13,7 @@ supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 # ==========================================
 # MQTT Configuration
 # ==========================================
-BROKER = "localhost"
+BROKER = "broker.hivemq.com"
 PORT = 1883
 
 TOPIC_TEMP = "home/temperature"
@@ -22,7 +22,10 @@ TOPIC_LIGHT = "home/light"
 TOPIC_MOTION = "home/motion"
 
 client = mqtt.Client()
+
 client.connect(BROKER, PORT)
+
+client.loop_start()
 
 print("=" * 50)
 print("        IoT Multi-Sensor Started")
@@ -51,10 +54,25 @@ try:
         # Publish to MQTT
         # ==========================================
 
-        client.publish(TOPIC_TEMP, str(temperature))
-        client.publish(TOPIC_HUMIDITY, str(humidity))
-        client.publish(TOPIC_LIGHT, str(light))
-        client.publish(TOPIC_MOTION, motion)
+        client.publish(
+            "abdulhafeez/iot/temperature",
+            str(temperature)
+        )
+
+        client.publish(
+            "abdulhafeez/iot/humidity",
+            str(humidity)
+        )
+
+        client.publish(
+            "abdulhafeez/iot/light",
+            str(light)
+        )
+
+        client.publish(
+            "abdulhafeez/iot/motion",
+            motion
+        )
 
         print("\nPublished MQTT Data")
         print("-----------------------------")

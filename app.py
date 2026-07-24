@@ -1,30 +1,28 @@
-from flask import Flask, render_template, send_file
+from flask import Flask, render_template, send_file, request, jsonify
 from supabase import create_client
 from config import SUPABASE_URL, SUPABASE_KEY
 import pandas as pd
 import io
 
-# -----------------------------------------
+# ==========================================
 # Flask Application
-# -----------------------------------------
+# ==========================================
 
 app = Flask(__name__)
 
-# -----------------------------------------
+# ==========================================
 # Connect to Supabase
-# -----------------------------------------
+# ==========================================
 
 supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
-
-# -----------------------------------------
-# Home Page
-# -----------------------------------------
+# ==========================================
+# Dashboard
+# ==========================================
 
 @app.route("/")
 def home():
 
-    # Fetch latest 20 records
     response = (
         supabase.table("temperature_data")
         .select("*")
@@ -33,17 +31,14 @@ def home():
         .execute()
     )
 
-    # Display oldest to newest
     records = list(reversed(response.data))
 
     labels = []
     temperatures = []
 
     for row in records:
-        labels.append(row["created_at"][11:19])      # HH:MM:SS
+        labels.append(row["created_at"][11:19])
         temperatures.append(float(row["temperature"]))
-
-    # Dashboard Information
 
     if records:
 
@@ -78,10 +73,9 @@ def home():
         status=status
     )
 
-
-# -----------------------------------------
+# ==========================================
 # Export CSV
-# -----------------------------------------
+# ==========================================
 
 @app.route("/export")
 def export_csv():
@@ -110,10 +104,105 @@ def export_csv():
         download_name="temperature_records.csv"
     )
 
+# ==========================================
+# REST API - GET Latest Temperature
+# ==========================================
 
-# -----------------------------------------
+@app.route("/api/temperature", methods=["GET"])
+def get_temperature():
+
+    response = (
+        supabase.table("temperature_data")
+        .select("*")
+        .order("created_at", desc=True)
+        .limit(1)
+        .execute()
+    )
+
+    if response.data:
+
+        return jsonify({
+            "success": True,
+            "data": response.data[0]
+        })
+
+    return jsonify({
+        "success": False,
+        "message": "No temperature data found"
+    })
+
+# ==========================================
+# REST API - POST Temperature
+# ==========================================
+
+@app.route("/api/temperature", methods=["POST"])
+def add_temperature():
+
+    data = request.get_json()
+
+    if not data:
+
+        return jsonify({
+            "success": False,
+            "message": "No JSON data received"
+        }), 400
+
+    if "temperature" not in data:
+
+        return jsonify({
+            "success": False,
+            "message": "Temperature field is required"
+        }), 400
+
+    temperature = float(data["temperature"])
+
+    supabase.table("temperature_data").insert({
+        "temperature": temperature
+    }).execute()
+
+    return jsonify({
+        "success": True,
+        "message": "Temperature inserted successfully",
+        "temperature": temperature
+    })
+
+# ==========================================
+# REST API - GET All Temperatures
+# ==========================================
+
+@app.route("/api/temperatures", methods=["GET"])
+def get_all_temperatures():
+
+    response = (
+        supabase.table("temperature_data")
+        .select("*")
+        .order("created_at", desc=True)
+        .execute()
+    )
+
+    return jsonify({
+        "success": True,
+        "count": len(response.data),
+        "data": response.data
+    })
+
+# ==========================================
+# REST API - DELETE Temperature
+# ==========================================
+
+@app.route("/api/temperature/<int:record_id>", methods=["DELETE"])
+def delete_temperature(record_id):
+
+    supabase.table("temperature_data").delete().eq("id", record_id).execute()
+
+    return jsonify({
+        "success": True,
+        "message": f"Record {record_id} deleted successfully"
+    })
+
+# ==========================================
 # Run Flask
-# -----------------------------------------
+# ==========================================
 
 if __name__ == "__main__":
     app.run(debug=True)
